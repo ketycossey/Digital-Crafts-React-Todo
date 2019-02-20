@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import List from './components/list.jsx';
 class App extends Component {
 
   constructor(props){
@@ -13,7 +14,6 @@ class App extends Component {
 handleChange(input){
     this.setState({ val : input})
 }
-
 
 handleSubmit(e){
     e.preventDefault()
@@ -30,20 +30,17 @@ toggleCompletion(task){
 }
 
   render() {
+    let todolist = this.state.tasks.filter(item => item.isCompleted === false).map((item,i) => <li key={i}>{item.task}<button onClick={() => this.toggleCompletion(item)}>Mark as Done</button></li>)
+    let completed = this.state.tasks.filter(item => item.isCompleted === true).map((item,i) => <li key={i}>{item.task}<button onClick={() => this.toggleCompletion(item)}>Restore</button></li>)
+    
     return (
       <div>
          <form onSubmit={(e) => this.handleSubmit(e)}>
           <input type="text" value={this.state.val} onChange={(e) => this.handleChange(e.target.value)}></input>
           <button type="submit">Add</button>
         </form>
-        <h3>To Do List</h3>
-        <ul>{
-          this.state.tasks.filter(item => item.isCompleted === false).map((item,i) => <li key={i}>{item.task}<button onClick={() => this.toggleCompletion(item)}>Mark as Done</button></li>)
-        }</ul>
-        <h3>Completed</h3>
-        <ul>{
-          this.state.tasks.filter(item => item.isCompleted === true).map((item,i) => <li key={i}>{item.task}<button onClick={() => this.toggleCompletion(item)}>Restore</button></li>)
-        }</ul>
+      <List name={'To Do List'} items={todolist}/>
+      <List name={'Completed'} items={completed}/>
       </div>
     );
   }
